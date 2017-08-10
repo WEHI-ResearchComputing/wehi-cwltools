@@ -1,0 +1,4 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/stornext/System/data/apps/fastqc/fastqc-0.11.5/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
