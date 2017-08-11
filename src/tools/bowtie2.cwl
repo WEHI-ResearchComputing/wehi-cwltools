@@ -4,7 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
-- $import: envvar-global.yml
+- $import: bowtie-env.yml
 - class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
 # - class: DockerRequirement
@@ -25,7 +25,11 @@ inputs:
       in the BOWTIE2_INDEXES environment variable.
 
   one:
-    type: File[]
+    type:
+    - "null"
+    - File
+    - type: array
+      items: File
     inputBinding:
       prefix: '-1'
       itemSeparator: ','
@@ -36,7 +40,11 @@ inputs:
       If - is specified, bowtie2 will read the mate 1s from the "standard in" or "stdin" filehandle.
 
   two:
-    type: File[]?
+    type:
+    - "null"
+    - File
+    - type: array
+      items: File
     inputBinding:
       prefix: '-2'
       itemSeparator: ','
@@ -404,7 +412,13 @@ inputs:
           max:
             type: int
     inputBinding:
-      valueFrom: --mp $(inputs.mp.min),$(inputs.mp.max)
+      valueFrom: >
+        ${
+          if ( inputs.mp == null )
+            return null;
+          else
+            return "--mp " + inputs.mp.min + "," + inputs.mp.max
+        }
     doc: |
       --mp MX,MN Sets the maximum (MX) and minimum (MN) mismatch penalties, both integers. A number less than
       or equal to MX and greater than or equal to MN is subtracted from the alignment score for each
@@ -432,7 +446,13 @@ inputs:
           extend:
             type: int
     inputBinding:
-      valueFrom: --rdg $(inputs.rdg.gap-open),$(inputs.rdg.extend)
+      valueFrom: >
+        ${
+        if ( inputs.rdg == null )
+            return null;
+          else
+            return "--rdg " + inputs.rdg.gap-open + "," + inputs.rdg.extend;
+        }
     doc: |
       --rdg <int1>,<int2> Sets the read gap open (<int1>) and extend (<int2>) penalties. A read gap of length N gets
       a penalty of <int1> + N * <int2>. Default: 5, 3.
@@ -448,7 +468,14 @@ inputs:
           extend:
             type: int
     inputBinding:
-      valueFrom: --rfg $(inputs.rfg.gap-open),$(inputs.rfg.extend)
+      valueFrom:  >
+        ${
+          if ( inputs.rfg == null )
+            return null;
+          else
+            return "--rfg " + inputs.rfg.gap-open + "," + inputs.rfg.extend;
+        }
+
     doc: |
       --rfg <int1>,<int2> Sets the reference gap open (<int1>) and extend (<int2>) penalties. A reference gap of length N
       gets a penalty of <int1> + N * <int2>. Default: 5, 3.

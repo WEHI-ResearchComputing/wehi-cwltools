@@ -1,0 +1,4 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/stornext/System/data/apps/bowtie2/bowtie2-2.2.9/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
