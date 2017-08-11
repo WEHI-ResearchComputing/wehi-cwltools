@@ -1,0 +1,4 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/stornext/System/data/apps/bedtools/bedtools-2.26.0/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
