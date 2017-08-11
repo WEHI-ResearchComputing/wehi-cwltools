@@ -4,9 +4,10 @@ class: CommandLineTool
 
 requirements:
 - $import: fastqc-env.yml
+- class: MultipleInputFeatureRequirement
 
 inputs:
-  fastqFile:
+  fastq:
     type:
       - File
       - type: array
@@ -15,7 +16,7 @@ inputs:
       position: 1
 
   outdir:
-    type: Directory
+    type: string?
     inputBinding:
       prefix: --outdir
     doc: |
@@ -49,7 +50,25 @@ inputs:
       a single output file from the sequences found in all files.
 
   nofilter:
-    type: boolean
+    type: boolean?
+    inputBinding:
+      prefix: --nofilter
+    doc: |
+      If running with --casava then don't remove read flagged by
+      casava as poor quality when performing the QC analysis.
+
+  extract:
+    type: boolean?
+    inputBinding:
+      prefix: --extract
+    doc: |
+      If set then the zipped output file will be uncompressed in
+      the same directory after it has been created.  By default
+      this option will be set if fastqc is run in non-interactive
+      mode.
+
+  java:
+    type: string?
     inputBinding:
       prefix: --java
     doc: |
@@ -161,11 +180,12 @@ baseCommand: [fastqc]
 
 outputs:
   zippedFile:
-    type: File
+    type: File[]
     outputBinding:
       glob: '*.zip'
+
   report:
-    type: Directory
+    type: File[]
     outputBinding:
-      glob: .
+      glob: '*.html'
 
