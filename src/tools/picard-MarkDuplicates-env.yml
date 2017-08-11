@@ -1,0 +1,8 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "CLASSPATH"
+    envValue: "/stornext/System/data/apps/picard-tools/picard-tools-2.9.4/picard.jar"
+  - envName: "PICARD"
+    envValue: "/stornext/System/data/apps/picard-tools/picard-tools-2.9.4/picard.jar"
+  - envName: "HTSJDK"
+    envValue: "/stornext/System/data/apps/picard-tools/picard-tools-2.9.4/bin"
