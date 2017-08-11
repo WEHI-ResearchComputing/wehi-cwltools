@@ -51,7 +51,7 @@ dct:creator:
     id: skanwal@student.unimelb.edu.au
     foaf:mbox: mailto:skanwal@student.unimelb.edu.au
 requirements:
-- $import: picard-MarkDuplicates-env.yml
+- $import: picard-env.yml
 - class: InlineJavascriptRequirement
 
 inputs:
