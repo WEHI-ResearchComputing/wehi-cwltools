@@ -1,0 +1,4 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/stornext/System/data/apps/igvtools/igvtools-2.3.72/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
