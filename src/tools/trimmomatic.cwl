@@ -100,8 +100,14 @@ inputs:
     type: trimmomatic-types.yml#slidingWindow?
     inputBinding:
       position: 15
-      valueFrom: |
-        'SLIDINGWINDOW:'$(self.windowSize)':'$(self.requiredQuality)
+      valueFrom: >
+        ${
+            if ( self == null )
+              return null;
+            else
+              return 'SLIDINGWINDOW:' + self.windowSize + ':' + self.requiredQuality;
+        }
+
     doc: |
       Perform a sliding window trimming, cutting once the average quality
       within the window falls below a threshold. By considering multiple
@@ -172,8 +178,13 @@ inputs:
     type: trimmomatic-types.yml#maxinfo?
     inputBinding:
       position: 15
-      valueFrom: |
-        MAXINFO:$(self.targetLength):$(strictness)
+      valueFrom: >
+          ${
+              if ( self == null )
+                return null;
+              else
+                return 'MAXINFO:' + self.targetLength + ':' + strictness;
+          }
     doc: |
       Performs an adaptive quality trim, balancing the benefits of retaining
       longer reads against the costs of retaining bases with errors.
