@@ -1,0 +1,6 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/stornext/System/data/apps/samtools/samtools-1.5/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:"
+  - envName: "LD_LIBRARY_PATH"
+    envValue: "/stornext/System/data/apps/samtools/samtools-1.5/lib"

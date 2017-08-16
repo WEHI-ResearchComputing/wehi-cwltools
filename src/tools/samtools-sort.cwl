@@ -4,7 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
-- $import: envvar-global.yml
+- $import: samtools-env.yml
 #- $import: samtools-docker.yml
 - class: InlineJavascriptRequirement
 
@@ -65,7 +65,7 @@ baseCommand: [samtools, sort]
 # - http://schema.org/docs/schema_org_rdfa.html
 
 # s:mainEntity:
-#   $import: samtools-metadata.yaml
+#   $import: samtools-metadata.yml
 
 # s:downloadUrl: https://github.com/common-workflow-language/workflows/blob/master/tools/samtools-sort.cwl
 # s:codeRepository: https://github.com/common-workflow-language/workflows

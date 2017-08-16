@@ -7,20 +7,30 @@ hints:
   SoftwareRequirement:
     packages:
       trimmomatic:
-        specs: [ https://identifiers.org/rrid/RRID:SCR_011848 ]
+        specs: [ "https://identifiers.org/rrid/RRID:SCR_011848" ]
         version: [ "0.32", "0.35", "0.36" ]
 
 requirements:
-#- $import: trimmomatic-docker.yml
-- $import: envvar-global.yml
-- $import: trimmomatic-types.yml
+- class:  ResourceRequirement
+  ramMin: 10240
+  coresMin: 8
+- class: SchemaDefRequirement
+  types:
+  - $import: trimmomatic-end_mode.yml
+  - $import: trimmomatic-sliding_window.yml
+  - $import: trimmomatic-phred.yml
+  - $import: trimmomatic-illumina_clipping.yml
+  - $import: trimmomatic-max_info.yml
 - class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
+- $import: trimmomatic-env.yml
+
+# hints:
+#  - $import: trimmomatic-docker.yml
 
 inputs:
   phred:
-    type: trimmomatic-types.yml#phred
-    default: '64'
+    type: trimmomatic-phred.yml#phred?
     inputBinding:
       prefix: -phred
       separate: false
@@ -56,14 +66,6 @@ inputs:
       separate: false
     doc: This (re)encodes the quality part of the FASTQ file to base 33.
 
-  nthreads:
-    type: int
-    default: 1
-    inputBinding:
-      position: 4
-      prefix: -threads
-    doc: Number of threads
-
   minlen:
     type: int?
     inputBinding:
@@ -97,7 +99,7 @@ inputs:
       investigated.
 
   slidingwindow:
-    type: trimmomatic-types.yml#slidingWindow?
+    type: trimmomatic-sliding_window.yml#slidingWindow?
     inputBinding:
       position: 15
       valueFrom: >
@@ -107,7 +109,6 @@ inputs:
             else
               return 'SLIDINGWINDOW:' + self.windowSize + ':' + self.requiredQuality;
         }
-
     doc: |
       Perform a sliding window trimming, cutting once the average quality
       within the window falls below a threshold. By considering multiple
@@ -117,10 +118,15 @@ inputs:
       <requiredQuality> specifies the average quality required
 
   illuminaClip:
-    type: trimmomatic-types.yml#illuminaClipping?
+    type: trimmomatic-illumina_clipping.yml#illuminaClipping?
     inputBinding:
-      valueFrom: |
-        ILLUMINACLIP:$(inputs.illuminaClip.adapters.path):$(self.seedMismatches):$(self.palindromeClipThreshold):$(self.simpleClipThreshold):$(self.minAdapterLength):$(self.keepBothReads)
+      valueFrom: >
+        ${
+            if ( self == null )
+              return null;
+            else
+              return 'ILLUMINACLIP:' + self.adapters.path + ':' + self.seedMismatches + ':' + self.palindromeClipThreshold + ':' + self.simpleClipThreshold + ':' + self.minAdapterLength + ':'+ self.keepBothReads;
+        }
       position: 11
     doc: Cut adapter and other illumina-specific sequences from the read.
 
@@ -174,17 +180,25 @@ inputs:
       marked with quality score of 2), but we recommend Sliding Window or
       MaxInfo instead
 
+  nthreads:
+    type: int
+    default: 1
+    inputBinding:
+      position: 4
+      prefix: -threads
+    doc: Number of threads
+
   maxinfo:
-    type: trimmomatic-types.yml#maxinfo?
+    type: trimmomatic-max_info.yml#maxinfo?
     inputBinding:
       position: 15
       valueFrom: >
-          ${
-              if ( self == null )
-                return null;
-              else
-                return 'MAXINFO:' + self.targetLength + ':' + strictness;
-          }
+        ${
+            if ( self == null )
+              return null;
+            else
+              return 'MAXINFO:' + self.targetLength + ':' + strictness;
+        }
     doc: |
       Performs an adaptive quality trim, balancing the benefits of retaining
       longer reads against the costs of retaining bases with errors.
@@ -196,7 +210,7 @@ inputs:
       longer reads, while a high value (>0.8) favours read correctness.
 
   end_mode:
-    type: trimmomatic-types.yml#end_mode
+    type: trimmomatic-end_mode.yml#end_mode
     inputBinding:
       position: 3
     doc: |
@@ -212,7 +226,7 @@ outputs:
   output_log:
     type: File
     outputBinding:
-      glob: $(inputs.reads1.nameroot).log
+      glob: trim.log
     label: Trimmomatic log
     doc: |
       log of all read trimmings, indicating the following details:
@@ -232,25 +246,37 @@ outputs:
     type: File?
     format: edam:format_1930  # fastq
     outputBinding:
-      glob: $(inputs.reads2.nameroot).trimmed.fastq
+      glob: |
+        ${ if (inputs.reads2 ) {
+             return inputs.reads2.nameroot + '.trimmed.fastq';
+           } else {
+             return null;
+           }
+         }
 
   reads2_trimmed_unpaired:
     type: File?
     format: edam:format_1930  # fastq
     outputBinding:
-      glob: $(inputs.reads2.nameroot).unpaired.trimmed.fastq
+      glob: |
+        ${ if (inputs.reads2 ) {
+             return inputs.reads2.nameroot + '.unpaired.trimmed.fastq';
+           } else {
+             return null;
+           }
+         }
 
 baseCommand: [ java, org.usadellab.trimmomatic.Trimmomatic ]
 
 arguments:
-- valueFrom: $(inputs.reads1.nameroot).log
+- valueFrom: trim.log
   prefix: -trimlog
   position: 4
 - valueFrom: $(inputs.reads1.nameroot).trimmed.fastq
   position: 7
 - valueFrom: |
     ${
-      if (inputs.end_mode == "PE" && inputs.reads1) {
+      if (inputs.end_mode == "PE" && inputs.reads2) {
         return inputs.reads1.nameroot + '.trimmed.unpaired.fastq';
       } else {
         return null;
@@ -287,5 +313,12 @@ doc: |
   Trimmomatic works with FASTQ files (using phred + 33 or phred + 64 quality scores,
   depending on the Illumina pipeline used).
 
-$namespaces: { edam: http://edamontology.org/ }
-$schemas: [ http://edamontology.org/EDAM_1.16.owl ]
+$namespaces:
+ edam: http://edamontology.org/
+ s: http://schema.org/
+$schemas:
+ - http://edamontology.org/EDAM_1.16.owl
+ - https://schema.org/docs/schema_org_rdfa.html
+
+s:license: "https://www.apache.org/licenses/LICENSE-2.0"
+s:copyrightHolder: "EMBL - European Bioinformatics Institute"

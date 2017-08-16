@@ -1,0 +1,6 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
+  - envName: "CLASSPATH"
+    envValue: "/stornext/System/data/apps/trimmomatic/trimmomatic-0.36/trimmomatic-0.36.jar"
