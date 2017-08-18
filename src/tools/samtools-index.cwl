@@ -5,17 +5,18 @@ class: CommandLineTool
 
 requirements:
 - $import: samtools-env.yml
-#- $import: samtools-docker.yml
 - class: InlineJavascriptRequirement
   expressionLib:
   - var new_ext = function() { var ext=inputs.bai?'.bai':inputs.csi?'.csi':'.bai';
     return inputs.input.path.split('/').slice(-1)[0]+ext; };
+- class: InitialWorkDirRequirement
+  listing: [ $(inputs.input) ]
+
 inputs:
   input:
     type: File
     inputBinding:
       position: 2
-
     doc: |
       Input bam file.
   interval:
@@ -35,14 +36,17 @@ inputs:
     default: false
     doc: |
       Generate BAI-format index for BAM files [default]
+
 outputs:
   index:
     type: File
+    secondaryFiles: $(new_ext())
     outputBinding:
-      glob: $(new_ext())
-
+      glob: $(inputs.input.basename)
     doc: The index file
+
 baseCommand: [samtools, index]
+
 arguments:
 - valueFrom: $(inputs.bai?'-b':inputs.csi?'-c':[])
   position: 1
