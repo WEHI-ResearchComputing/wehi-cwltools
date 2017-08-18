@@ -11,9 +11,6 @@ hints:
         version: [ "0.32", "0.35", "0.36" ]
 
 requirements:
-- class:  ResourceRequirement
-  ramMin: 10240
-  coresMin: 8
 - class: SchemaDefRequirement
   types:
   - $import: trimmomatic-end_mode.yml
