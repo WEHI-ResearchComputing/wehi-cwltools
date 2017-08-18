@@ -4,7 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
-- $import: envvar-global.yml
+- $import: platypus-env.yml
 - class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
 # - class: DockerRequirement
