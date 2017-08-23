@@ -5,7 +5,7 @@ envDef:
   - envName: "LD_LIBRARY_PATH"
     envValue: "/stornext/System/data/apps/htslib/htslib-1.5/lib:/stornext/System/data/apps/samtools/samtools-1.5/lib:/stornext/System/data/apps/R/R-3.4.0/lib64/R/lib:/stornext/System/data/apps/bwa/bwa-0.7.15/lib"
   - envName: "CLASSPATH"
-    envValue: "/stornext/System/data/apps/trimmomatic/trimmomatic-0.36/trimmomatic-0.36.jar:/stornext/System/data/apps/varscan/varscan-2.3.9/VarScan.v2.3.9.jar:/wehisan/bioinf/bioinf-data/Papenfuss_lab/software/gridss/gridss-1.4.1-jar-with-dependencies.jar"
+    envValue: "/wehisan/bioinf/bioinf-data/Papenfuss_lab/software/gridss/gridss-1.4.1-jar-with-dependencies.jar"
   - envName: "HTSLIB_DIR"
     envValue: "/stornext/System/data/apps/htslib/htslib-1.5"
   - envName: "R_HOME"
