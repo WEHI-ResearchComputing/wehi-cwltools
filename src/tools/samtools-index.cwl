@@ -40,7 +40,7 @@ inputs:
 outputs:
   index:
     type: File
-    secondaryFiles: $(new_ext())
+    secondaryFiles: $(inputs.bai?'.bai':inputs.csi?'.csi':[])
     outputBinding:
       glob: $(inputs.input.basename)
     doc: The index file
