@@ -10,10 +10,12 @@ requirements:
 
 inputs:
   INPUT:
-    type: File[]
-    inputBinding:
-      prefix: INPUT=
-      separate: false
+    type:
+      type: array
+      items: File
+      inputBinding:
+        prefix: INPUT=
+        separate: false
     doc: |
       Input libraries. Specify multiple times (ie INPUT=file1.bam INPUT=file2.bam INPUT=file3.bam ) to process multiple libraries together.
       Input files must be coordinated sorted SAM/BAM/CRAM files.
@@ -21,24 +23,17 @@ inputs:
       Input files containing read groups from multiple different libraries should be split into an input file per-library.
       The reference genome used for all input files matches the reference genome supplied to GRIDSS.
 
-  # TMP_DIR:
-  #   type: string?
-  #   inputBinding:
-  #     prefix: TMP_DIR=
-  #     separate: false
-  #   doc: |
-  #     This field is a standard Picard tools argument and carries the usual meaning.
-  #     Temporary files created during processes such as sort are written to this directory.
-
-  # WORKING_DIR:
-  #   type: string?
-  #   inputBinding:
-  #     prefix: WORKING_DIR=
-  #     separate: false
-  #   doc: |
-  #     Directory to write intermediate results directories. By default, intermediate files for each input or output file are
-  #     written to a subdirectory in the same directory as the relevant input or output file. If WORKING_DIR is set, all
-  #     intermediate results are written to subdirectories of the given directory.
+  INPUT_LABEL:
+    type:
+      - "null"
+      - type: array
+        items: string
+        inputBinding:
+          prefix: INPUT_LABEL=
+          separate: false
+    doc: |
+      Labels to allocate inputs. The default label for each input file corresponds to the file name but can be overridden by specifying an
+      INPUT_LABEL for each INPUT. The output any for INPUT files with the same INPUT_LABEL will be merged.
 
   WORKING_THREADS:
     type: int?
@@ -52,7 +47,7 @@ inputs:
       expensive operation. This parameter defaults to the number of cores available.
 
   REFERENCE_SEQUENCE:
-    type: string
+    type: File
     inputBinding:
       prefix: REFERENCE_SEQUENCE=
       separate: false
@@ -84,15 +79,6 @@ inputs:
 
       Note that this sort order matches the Picard tools SortSam queryname sort order (which unfortuntely is not the same as the samtools
       name sort ordeR).
-
-  INPUT_LABEL:
-    type: string[]?
-    inputBinding:
-      prefix: INPUT_LABEL=
-      separate: false
-    doc: |
-      Labels to allocate inputs. The default label for each input file corresponds to the file name but can be overridden by specifying an
-      INPUT_LABEL for each INPUT. The output any for INPUT files with the same INPUT_LABEL will be merged.
 
   ASSEMBLY:
     type: string
@@ -156,7 +142,6 @@ inputs:
     type: string
     inputBinding:
       prefix: OUTPUT=
-      separate: false
     doc: |
       Variant calling output file. Can be VCF or BCF.
 
