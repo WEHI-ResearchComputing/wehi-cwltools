@@ -23,6 +23,16 @@ inputs:
       Input files containing read groups from multiple different libraries should be split into an input file per-library.
       The reference genome used for all input files matches the reference genome supplied to GRIDSS.
 
+  INPUT2:
+    type:
+      type: array
+      items: File
+      inputBinding:
+        prefix: INPUT=
+        separate: false
+    doc: |
+      The same as INPUT but allows a fixed comparison
+
   INPUT_LABEL:
     type:
       - "null"
@@ -34,6 +44,17 @@ inputs:
     doc: |
       Labels to allocate inputs. The default label for each input file corresponds to the file name but can be overridden by specifying an
       INPUT_LABEL for each INPUT. The output any for INPUT files with the same INPUT_LABEL will be merged.
+
+  INPUT_LABEL2:
+    type:
+      - "null"
+      - type: array
+        items: string
+        inputBinding:
+          prefix: INPUT_LABEL=
+          separate: false
+    doc: |
+      The same as INPUT_LABEL but allows a fixed comparison
 
   WORKING_THREADS:
     type: int?
