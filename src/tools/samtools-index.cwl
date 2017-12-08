@@ -33,14 +33,14 @@ inputs:
       Generate CSI-format index for BAM files
   bai:
     type: boolean
-    default: false
+    default: true
     doc: |
       Generate BAI-format index for BAM files [default]
 
 outputs:
   index:
     type: File
-    secondaryFiles: $(inputs.bai?'.bai':inputs.csi?'.csi':[])
+    secondaryFiles: $(new_ext())
     outputBinding:
       glob: $(inputs.input.basename)
     doc: The index file
