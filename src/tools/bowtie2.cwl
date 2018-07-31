@@ -441,7 +441,7 @@ inputs:
       - type: record
         name: rdg
         fields:
-          gap-open:
+          gap_open:
             type: int
           extend:
             type: int
@@ -451,7 +451,7 @@ inputs:
         if ( inputs.rdg == null )
             return null;
           else
-            return "--rdg " + inputs.rdg.gap-open + "," + inputs.rdg.extend;
+            return "--rdg " + inputs.rdg.gap_open + "," + inputs.rdg.extend;
         }
     doc: |
       --rdg <int1>,<int2> Sets the read gap open (<int1>) and extend (<int2>) penalties. A read gap of length N gets
@@ -463,7 +463,7 @@ inputs:
       - type: record
         name: rfg
         fields:
-          gap-open:
+          gap_open:
             type: int
           extend:
             type: int
@@ -473,7 +473,7 @@ inputs:
           if ( inputs.rfg == null )
             return null;
           else
-            return "--rfg " + inputs.rfg.gap-open + "," + inputs.rfg.extend;
+            return "--rfg " + inputs.rfg.gap_open + "," + inputs.rfg.extend;
         }
 
     doc: |

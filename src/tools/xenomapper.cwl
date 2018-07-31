@@ -4,7 +4,7 @@ cwlVersion: v1.0
 class: CommandLineTool
 
 requirements:
-- $import: envvar-global.yml
+- $import: xenomapper-env.yml
 - class: InlineJavascriptRequirement
 
 baseCommand: xenomapper
