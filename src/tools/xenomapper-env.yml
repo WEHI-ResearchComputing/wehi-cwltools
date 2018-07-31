@@ -1,0 +1,6 @@
+class: EnvVarRequirement
+envDef:
+  - envName: "PATH"
+    envValue: "/stornext/System/data/apps/xenomapper/xenomapper-1.0.1/bin"
+  - envName: "PYTHONPATH"
+    envValue: "/stornext/System/data/apps/xenomapper/xenomapper-1.0.1/lib/python3.5/site-packages"
