@@ -194,7 +194,7 @@ inputs:
             if ( self == null )
               return null;
             else
-              return 'MAXINFO:' + self.targetLength + ':' + strictness;
+              return 'MAXINFO:' + self.targetLength + ':' + self.strictness;
         }
     doc: |
       Performs an adaptive quality trim, balancing the benefits of retaining
