@@ -25,11 +25,12 @@ inputs:
 
   INPUT2:
     type:
-      type: array
-      items: File
-      inputBinding:
-        prefix: INPUT=
-        separate: false
+      - "null"
+      - type: array
+        items: File
+        inputBinding:
+          prefix: INPUT=
+          separate: false
     doc: |
       The same as INPUT but allows a fixed comparison
 
@@ -68,7 +69,7 @@ inputs:
       expensive operation. This parameter defaults to the number of cores available.
 
   REFERENCE_SEQUENCE:
-    type: File
+    type: string
     inputBinding:
       prefix: REFERENCE_SEQUENCE=
       separate: false
