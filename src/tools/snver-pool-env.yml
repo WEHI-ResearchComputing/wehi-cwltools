@@ -2,5 +2,3 @@ class: EnvVarRequirement
 envDef:
   - envName: "CLASSPATH"
     envValue: "/stornext/HPCScratch/software/SNVer/current/SNVerPool.jar"
-  - envName: "TMP"
-    envValue: "/home/thomas.e/tmp"
