@@ -135,12 +135,12 @@ inputs:
 
 outputs:
   primary_specific:
-    type: File?
+    type: File
     outputBinding:
       glob: $(inputs.primary_specific_fn)
 
   secondary_specific:
-    type: File?
+    type: File
     outputBinding:
       glob: $(inputs.secondary_specific_fn)
 

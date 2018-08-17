@@ -214,16 +214,10 @@ inputs:
       Single End (SE) or Paired End (PE) mode
 
 outputs:
-  reads1_trimmed:
-    type: File
-    format: edam:format_1930  # fastq
-    outputBinding:
-      glob: $(inputs.reads1.nameroot).trimmed.fastq
-
   output_log:
     type: File
     outputBinding:
-      glob: trim.log
+      glob: $(inputs.reads1.nameroot.substring(0, inputs.reads1.nameroot.length-6)).trim.log
     label: Trimmomatic log
     doc: |
       log of all read trimmings, indicating the following details:
@@ -233,19 +227,25 @@ outputs:
         the location of the last surviving base in the original read
         the amount trimmed from the end
 
+  reads1_trimmed:
+    type: File
+    format: edam:format_1930  # fastq
+    outputBinding:
+      glob: $(inputs.reads1.nameroot.substring(0, inputs.reads1.nameroot.length-6)).trimmed.fastq
+
   reads1_trimmed_unpaired:
     type: File?
     format: edam:format_1930  # fastq
     outputBinding:
-      glob: $(inputs.reads1.nameroot).unpaired.trimmed.fastq
+      glob: $(inputs.reads1.nameroot.substring(0, inputs.reads1.nameroot.length-6)).unpaired.trimmed.fastq
 
-  reads2_trimmed_paired:
-    type: File?
+  reads2_trimmed:
+    type: File
     format: edam:format_1930  # fastq
     outputBinding:
       glob: |
         ${ if (inputs.reads2 ) {
-             return inputs.reads2.nameroot + '.trimmed.fastq';
+             return inputs.reads2.nameroot.substring(0, inputs.reads2.nameroot.length-6) + '.trimmed.fastq';
            } else {
              return null;
            }
@@ -257,7 +257,7 @@ outputs:
     outputBinding:
       glob: |
         ${ if (inputs.reads2 ) {
-             return inputs.reads2.nameroot + '.unpaired.trimmed.fastq';
+             return inputs.reads2.nameroot.substring(0, inputs.reads2.nameroot.length-6) + '.unpaired.trimmed.fastq';
            } else {
              return null;
            }
@@ -266,15 +266,15 @@ outputs:
 baseCommand: [ java, org.usadellab.trimmomatic.Trimmomatic ]
 
 arguments:
-- valueFrom: trim.log
+- valueFrom: $(inputs.reads1.nameroot.substring(0, inputs.reads1.nameroot.length-6)).trim.log
   prefix: -trimlog
   position: 4
-- valueFrom: $(inputs.reads1.nameroot).trimmed.fastq
+- valueFrom: $(inputs.reads1.nameroot.substring(0, inputs.reads1.nameroot.length-6)).trimmed.fastq
   position: 7
 - valueFrom: |
     ${
       if (inputs.end_mode == "PE" && inputs.reads2) {
-        return inputs.reads1.nameroot + '.trimmed.unpaired.fastq';
+        return inputs.reads1.nameroot.substring(0, inputs.reads1.nameroot.length-6) + '.trimmed.unpaired.fastq';
       } else {
         return null;
       }
@@ -283,7 +283,7 @@ arguments:
 - valueFrom: |
     ${
       if (inputs.end_mode == "PE" && inputs.reads2) {
-        return inputs.reads2.nameroot + '.trimmed.fastq';
+        return inputs.reads2.nameroot.substring(0, inputs.reads2.nameroot.length-6) + '.trimmed.fastq';
       } else {
         return null;
       }
@@ -292,7 +292,7 @@ arguments:
 - valueFrom: |
     ${
       if (inputs.end_mode == "PE" && inputs.reads2) {
-        return inputs.reads2.nameroot + '.trimmed.unpaired.fastq';
+        return inputs.reads2.nameroot.substring(0, inputs.reads2.nameroot.length-6) + '.trimmed.unpaired.fastq';
       } else {
         return null;
       }

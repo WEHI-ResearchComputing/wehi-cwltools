@@ -6,9 +6,6 @@ class: CommandLineTool
 requirements:
 - $import: samtools-env.yml
 - class: InlineJavascriptRequirement
-  expressionLib:
-  - var new_ext = function() { var ext=inputs.bai?'.bai':inputs.csi?'.csi':'.bai';
-    return inputs.input.path.split('/').slice(-1)[0]+ext; };
 - class: InitialWorkDirRequirement
   listing: [ $(inputs.input) ]
 
@@ -19,6 +16,7 @@ inputs:
       position: 2
     doc: |
       Input bam file.
+
   interval:
     type: int?
     inputBinding:
@@ -26,32 +24,36 @@ inputs:
       prefix: -m
     doc: |
       Set minimum interval size for CSI indices to 2^INT [14]
-  csi:
-    type: boolean
-    default: false
-    doc: |
-      Generate CSI-format index for BAM files
-  bai:
-    type: boolean
-    default: true
-    doc: |
-      Generate BAI-format index for BAM files [default]
+  # csi:
+  #   type: boolean
+  #   default: false
+  #   doc: |
+  #     Generate CSI-format index for BAM files
+  # bai:
+  #   type: boolean
+  #   default: true
+  #   doc: |
+  #     Generate BAI-format index for BAM files [default]
 
 outputs:
   index:
     type: File
-    secondaryFiles: $(new_ext())
+    # secondaryFiles: ".bai"
     outputBinding:
-      glob: $(inputs.input.basename)
+      glob: $(inputs.input.basename + '.bai')
     doc: The index file
 
-baseCommand: [samtools, index]
+baseCommand: [samtools, index, -b]
 
-arguments:
-- valueFrom: $(inputs.bai?'-b':inputs.csi?'-c':[])
-  position: 1
-- valueFrom: $(new_ext())
-  position: 3
+# arguments:
+#  - valueFrom: $(inputs.bai?'-b':inputs.csi?'-c':[])
+#   position: 1
+# - valueFrom: >
+#     ${
+#       var ext=inputs.bai?'.bai':inputs.csi?'.csi':'.bai';
+#       return inputs.input.path.split('/').slice(-1)[0]+ext;
+#     }
+#   position: 3
 
 # $namespaces:
 #   s: http://schema.org/
@@ -86,5 +88,3 @@ arguments:
 #       s:name: Barski Lab
 # doc: |
 #   samtools-index.cwl is developed for CWL consortium
-
-

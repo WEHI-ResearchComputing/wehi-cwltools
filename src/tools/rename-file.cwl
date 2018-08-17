@@ -3,11 +3,11 @@
 cwlVersion: v1.0
 class: CommandLineTool
 
-baseCommand: [mv]
+baseCommand: mv
 
 inputs:
   infile:
-    type: File?
+    type: File
     inputBinding:
       position: 1
   outfile:
